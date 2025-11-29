@@ -2,15 +2,21 @@
 
 A Pine Script indicator designed specifically for the VIX (Volatility Index) that displays color-coded price level zones and customizable text labels to help you quickly identify which price range the VIX is currently trading in.
 
+## Screenshot
+
+![VIX Price Levels Indicator](images/vix_price_levels_screenshot.png)
+
+*Example of the VIX Price Levels indicator displaying all 6 color-coded levels on a VIX chart*
+
 ## Features
 
-- **6 Price Level Zones**: Visual color-coded regions covering the entire VIX price range
-  - Level 1: 0-12 (Blue)
-  - Level 2: 12-15 (Purple)
-  - Level 3: 15-20 (Green)
-  - Level 4: 20-25 (Yellow)
-  - Level 5: 25-30 (Orange)
-  - Level 6: 30+ (Red)
+- **6 Configurable Price Level Zones**: Visual color-coded regions covering the entire VIX price range
+  - Level 1: 0-12 (Blue) - *default range, fully customizable*
+  - Level 2: 12-15 (Purple) - *default range, fully customizable*
+  - Level 3: 15-20 (Green) - *default range, fully customizable*
+  - Level 4: 20-25 (Yellow) - *default range, fully customizable*
+  - Level 5: 25-30 (Orange) - *default range, fully customizable*
+  - Level 6: 30+ (Red) - *default start value, fully customizable*
 
 - **Customizable Text Labels**: Add your own text annotations for each level
 - **Current Price Indicator**: Shows which level the current price is in
@@ -32,7 +38,7 @@ A Pine Script indicator designed specifically for the VIX (Volatility Index) tha
 
 ### Step 3: Copy the Script
 
-1. Open the `price_levels.pine` file
+1. Open the `vix_price_levels.pine` file
 2. Select all the code (`Ctrl + A`)
 3. Copy it (`Ctrl + C`)
 4. Paste it into the TradingView Pine Editor (`Ctrl + V`)
@@ -53,16 +59,31 @@ The indicator will now appear on your chart!
 2. Click the **gear icon** ⚙️ to open settings
 3. Navigate to the **"Inputs"** tab
 
+### Configuring Level Ranges
+
+In the **"Level Ranges"** section, you can customize the start and end values for each level:
+
+- **Level 1 Start/End**: Configure the range for Level 1 (default: 0-12)
+- **Level 2 Start/End**: Configure the range for Level 2 (default: 12-15)
+- **Level 3 Start/End**: Configure the range for Level 3 (default: 15-20)
+- **Level 4 Start/End**: Configure the range for Level 4 (default: 20-25)
+- **Level 5 Start/End**: Configure the range for Level 5 (default: 25-30)
+- **Level 6 Start**: Configure the start value for Level 6 (default: 30+)
+
+All level boundaries, fills, and labels will automatically update based on your configured ranges.
+
 ### Setting Up Level Text Labels
 
-In the **"Level Labels"** section, you can:
+In the **"Level Labels"** section, you can add custom text annotations for each level:
 
-- **Level 1 (0-12) Text**: Enter text for the first level (e.g., "Low Volatility")
-- **Level 2 (12-15) Text**: Enter text for the second level (e.g., "Moderate")
-- **Level 3 (15-20) Text**: Enter text for the third level (e.g., "Elevated")
-- **Level 4 (20-25) Text**: Enter text for the fourth level (e.g., "High")
-- **Level 5 (25-30) Text**: Enter text for the fifth level (e.g., "Very High")
-- **Level 6 (30+) Text**: Enter text for the sixth level (e.g., "Extreme Fear")
+- **Level 1 Text**: Enter text for the first level (e.g., "Low Volatility")
+- **Level 2 Text**: Enter text for the second level (e.g., "Moderate")
+- **Level 3 Text**: Enter text for the third level (e.g., "Elevated")
+- **Level 4 Text**: Enter text for the fourth level (e.g., "High")
+- **Level 5 Text**: Enter text for the fifth level (e.g., "Very High")
+- **Level 6 Text**: Enter text for the sixth level (e.g., "Extreme Fear")
+
+*Note: The level ranges shown in labels and indicators will reflect your configured values from the "Level Ranges" section.*
 
 ### Text Display Options
 

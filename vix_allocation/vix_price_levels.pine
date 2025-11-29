@@ -1,26 +1,26 @@
 //@version=5
 indicator("VIX Price Levels", overlay=true)
 
-// Define level ranges
-level1_start = 0
-level1_end = 12
-level2_start = 12
-level2_end = 15
-level3_start = 15
-level3_end = 20
-level4_start = 20
-level4_end = 25
-level5_start = 25
-level5_end = 30
-level6_start = 30
+// Define level ranges (configurable inputs)
+level1_start = input.float(0.0, "Level 1 Start", group="Level Ranges", tooltip="Start value for Level 1")
+level1_end = input.float(12.0, "Level 1 End", group="Level Ranges", tooltip="End value for Level 1")
+level2_start = input.float(12.0, "Level 2 Start", group="Level Ranges", tooltip="Start value for Level 2")
+level2_end = input.float(15.0, "Level 2 End", group="Level Ranges", tooltip="End value for Level 2")
+level3_start = input.float(15.0, "Level 3 Start", group="Level Ranges", tooltip="Start value for Level 3")
+level3_end = input.float(20.0, "Level 3 End", group="Level Ranges", tooltip="End value for Level 3")
+level4_start = input.float(20.0, "Level 4 Start", group="Level Ranges", tooltip="Start value for Level 4")
+level4_end = input.float(25.0, "Level 4 End", group="Level Ranges", tooltip="End value for Level 4")
+level5_start = input.float(25.0, "Level 5 Start", group="Level Ranges", tooltip="Start value for Level 5")
+level5_end = input.float(30.0, "Level 5 End", group="Level Ranges", tooltip="End value for Level 5")
+level6_start = input.float(30.0, "Level 6 Start", group="Level Ranges", tooltip="Start value for Level 6 (30+)")
 
 // Text inputs for each level
-level1_text = input.string("", "Level 1 (0-12) Text", group="Level Labels", tooltip="Enter text to display for Level 1")
-level2_text = input.string("", "Level 2 (12-15) Text", group="Level Labels", tooltip="Enter text to display for Level 2")
-level3_text = input.string("", "Level 3 (15-20) Text", group="Level Labels", tooltip="Enter text to display for Level 3")
-level4_text = input.string("", "Level 4 (20-25) Text", group="Level Labels", tooltip="Enter text to display for Level 4")
-level5_text = input.string("", "Level 5 (25-30) Text", group="Level Labels", tooltip="Enter text to display for Level 5")
-level6_text = input.string("", "Level 6 (30+) Text", group="Level Labels", tooltip="Enter text to display for Level 6")
+level1_text = input.string("", "Level 1 Text", group="Level Labels", tooltip="Enter text to display for Level 1. Range is configured in 'Level Ranges' group.")
+level2_text = input.string("", "Level 2 Text", group="Level Labels", tooltip="Enter text to display for Level 2. Range is configured in 'Level Ranges' group.")
+level3_text = input.string("", "Level 3 Text", group="Level Labels", tooltip="Enter text to display for Level 3. Range is configured in 'Level Ranges' group.")
+level4_text = input.string("", "Level 4 Text", group="Level Labels", tooltip="Enter text to display for Level 4. Range is configured in 'Level Ranges' group.")
+level5_text = input.string("", "Level 5 Text", group="Level Labels", tooltip="Enter text to display for Level 5. Range is configured in 'Level Ranges' group.")
+level6_text = input.string("", "Level 6 Text", group="Level Labels", tooltip="Enter text to display for Level 6. Range is configured in 'Level Ranges' group.")
 
 // Text position settings
 text_position = input.string("Right", "Text Position", options=["Left", "Right", "Center"], group="Level Labels")
@@ -34,14 +34,14 @@ current_price = close
 
 // Draw horizontal lines for each level boundary with labels (only if VIX)
 // Using plot instead of hline to allow conditional display
-plot(is_vix ? level1_end : na, "Level 1 End (12)", color=color.new(color.blue, 30), linewidth=2)
-plot(is_vix ? level2_start : na, "Level 2 Start (12)", color=color.new(color.purple, 30), linewidth=2)
-plot(is_vix ? level2_end : na, "Level 2 End (15)", color=color.new(color.purple, 30), linewidth=2)
-plot(is_vix ? level3_start : na, "Level 3 Start (15)", color=color.new(color.green, 30), linewidth=2)
-plot(is_vix ? level3_end : na, "Level 3 End (20)", color=color.new(color.green, 30), linewidth=2)
-plot(is_vix ? level4_end : na, "Level 4 End (25)", color=color.new(color.yellow, 30), linewidth=2)
-plot(is_vix ? level5_end : na, "Level 5 End (30)", color=color.new(color.orange, 30), linewidth=2)
-plot(is_vix ? level6_start : na, "Level 6 Start (30+)", color=color.new(color.red, 30), linewidth=2)
+plot(is_vix ? level1_end : na, "Level 1 End", color=color.new(color.blue, 30), linewidth=2)
+plot(is_vix ? level2_start : na, "Level 2 Start", color=color.new(color.purple, 30), linewidth=2)
+plot(is_vix ? level2_end : na, "Level 2 End", color=color.new(color.purple, 30), linewidth=2)
+plot(is_vix ? level3_start : na, "Level 3 Start", color=color.new(color.green, 30), linewidth=2)
+plot(is_vix ? level3_end : na, "Level 3 End", color=color.new(color.green, 30), linewidth=2)
+plot(is_vix ? level4_end : na, "Level 4 End", color=color.new(color.yellow, 30), linewidth=2)
+plot(is_vix ? level5_end : na, "Level 5 End", color=color.new(color.orange, 30), linewidth=2)
+plot(is_vix ? level6_start : na, "Level 6 Start", color=color.new(color.red, 30), linewidth=2)
 
 // Draw level regions using plots and fills (only if VIX)
 p1_top = plot(is_vix ? level1_end : na, "L1 Top", color=na)
@@ -154,22 +154,22 @@ if barstate.islast and is_vix
     level_color = color.white
 
     if current_price >= level6_start
-        level_text := "Level 6: 30+"
+        level_text := "Level 6: " + str.tostring(level6_start) + "+"
         level_color := color.red
     else if current_price >= level5_start
-        level_text := "Level 5: 25-30"
+        level_text := "Level 5: " + str.tostring(level5_start) + "-" + str.tostring(level5_end)
         level_color := color.orange
     else if current_price >= level4_start
-        level_text := "Level 4: 20-25"
+        level_text := "Level 4: " + str.tostring(level4_start) + "-" + str.tostring(level4_end)
         level_color := color.yellow
     else if current_price >= level3_start
-        level_text := "Level 3: 15-20"
+        level_text := "Level 3: " + str.tostring(level3_start) + "-" + str.tostring(level3_end)
         level_color := color.green
     else if current_price >= level2_start
-        level_text := "Level 2: 12-15"
+        level_text := "Level 2: " + str.tostring(level2_start) + "-" + str.tostring(level2_end)
         level_color := color.purple
     else if current_price >= level1_start
-        level_text := "Level 1: 0-12"
+        level_text := "Level 1: " + str.tostring(level1_start) + "-" + str.tostring(level1_end)
         level_color := color.blue
 
     label.set_xy(current_level_label, bar_index, current_price)
