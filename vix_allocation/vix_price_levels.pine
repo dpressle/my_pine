@@ -1,0 +1,177 @@
+//@version=5
+indicator("VIX Price Levels", overlay=true)
+
+// Define level ranges
+level1_start = 0
+level1_end = 12
+level2_start = 12
+level2_end = 15
+level3_start = 15
+level3_end = 20
+level4_start = 20
+level4_end = 25
+level5_start = 25
+level5_end = 30
+level6_start = 30
+
+// Text inputs for each level
+level1_text = input.string("", "Level 1 (0-12) Text", group="Level Labels", tooltip="Enter text to display for Level 1")
+level2_text = input.string("", "Level 2 (12-15) Text", group="Level Labels", tooltip="Enter text to display for Level 2")
+level3_text = input.string("", "Level 3 (15-20) Text", group="Level Labels", tooltip="Enter text to display for Level 3")
+level4_text = input.string("", "Level 4 (20-25) Text", group="Level Labels", tooltip="Enter text to display for Level 4")
+level5_text = input.string("", "Level 5 (25-30) Text", group="Level Labels", tooltip="Enter text to display for Level 5")
+level6_text = input.string("", "Level 6 (30+) Text", group="Level Labels", tooltip="Enter text to display for Level 6")
+
+// Text position settings
+text_position = input.string("Right", "Text Position", options=["Left", "Right", "Center"], group="Level Labels")
+show_text = input.bool(true, "Show Level Text", group="Level Labels")
+
+// Check if current symbol is VIX
+is_vix = str.contains(syminfo.ticker, "VIX") or str.contains(syminfo.tickerid, "VIX")
+
+// Get current close price
+current_price = close
+
+// Draw horizontal lines for each level boundary with labels (only if VIX)
+// Using plot instead of hline to allow conditional display
+plot(is_vix ? level1_end : na, "Level 1 End (12)", color=color.new(color.blue, 30), linewidth=2)
+plot(is_vix ? level2_start : na, "Level 2 Start (12)", color=color.new(color.purple, 30), linewidth=2)
+plot(is_vix ? level2_end : na, "Level 2 End (15)", color=color.new(color.purple, 30), linewidth=2)
+plot(is_vix ? level3_start : na, "Level 3 Start (15)", color=color.new(color.green, 30), linewidth=2)
+plot(is_vix ? level3_end : na, "Level 3 End (20)", color=color.new(color.green, 30), linewidth=2)
+plot(is_vix ? level4_end : na, "Level 4 End (25)", color=color.new(color.yellow, 30), linewidth=2)
+plot(is_vix ? level5_end : na, "Level 5 End (30)", color=color.new(color.orange, 30), linewidth=2)
+plot(is_vix ? level6_start : na, "Level 6 Start (30+)", color=color.new(color.red, 30), linewidth=2)
+
+// Draw level regions using plots and fills (only if VIX)
+p1_top = plot(is_vix ? level1_end : na, "L1 Top", color=na)
+p1_bottom = plot(is_vix ? level1_start : na, "L1 Bottom", color=na)
+fill(p1_top, p1_bottom, color=color.new(color.blue, 92), title="Level 1 Fill")
+
+p2_top = plot(is_vix ? level2_end : na, "L2 Top", color=na)
+p2_bottom = plot(is_vix ? level2_start : na, "L2 Bottom", color=na)
+fill(p2_top, p2_bottom, color=color.new(color.purple, 92), title="Level 2 Fill")
+
+p3_top = plot(is_vix ? level3_end : na, "L3 Top", color=na)
+p3_bottom = plot(is_vix ? level3_start : na, "L3 Bottom", color=na)
+fill(p3_top, p3_bottom, color=color.new(color.green, 92), title="Level 3 Fill")
+
+p4_top = plot(is_vix ? level4_end : na, "L4 Top", color=na)
+p4_bottom = plot(is_vix ? level4_start : na, "L4 Bottom", color=na)
+fill(p4_top, p4_bottom, color=color.new(color.yellow, 92), title="Level 4 Fill")
+
+p5_top = plot(is_vix ? level5_end : na, "L5 Top", color=na)
+p5_bottom = plot(is_vix ? level5_start : na, "L5 Bottom", color=na)
+fill(p5_top, p5_bottom, color=color.new(color.orange, 92), title="Level 5 Fill")
+
+p6_top = plot(is_vix ? level6_start + 100 : na, "L6 Top", color=na)  // Extend upward
+p6_bottom = plot(is_vix ? level6_start : na, "L6 Bottom", color=na)
+fill(p6_top, p6_bottom, color=color.new(color.red, 92), title="Level 6 Fill")
+
+// Create labels for level text (only on last bar to avoid clutter)
+var label level1_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.blue)
+var label level2_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.purple)
+var label level3_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.green)
+var label level4_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.orange)
+var label level5_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.orange)
+var label level6_label = label.new(na, na, "", style=label.style_label_left, size=size.normal, color=color.white, textcolor=color.red)
+
+// Determine label style based on position setting
+label_style = text_position == "Left" ? label.style_label_right : text_position == "Right" ? label.style_label_left : label.style_label_center
+
+if barstate.islast and show_text and is_vix
+    // Level 1 label - white background with dark blue text
+    if level1_text != ""
+        label.set_xy(level1_label, bar_index, (level1_start + level1_end) / 2)
+        label.set_text(level1_label, level1_text)
+        label.set_style(level1_label, label_style)
+        label.set_color(level1_label, color.new(color.white, 0))
+        label.set_textcolor(level1_label, color.new(color.blue, 0))
+        label.set_size(level1_label, size.normal)
+    else
+        label.delete(level1_label)
+
+    // Level 2 label - white background with purple text
+    if level2_text != ""
+        label.set_xy(level2_label, bar_index, (level2_start + level2_end) / 2)
+        label.set_text(level2_label, level2_text)
+        label.set_style(level2_label, label_style)
+        label.set_color(level2_label, color.new(color.white, 0))
+        label.set_textcolor(level2_label, color.new(color.purple, 0))
+        label.set_size(level2_label, size.normal)
+    else
+        label.delete(level2_label)
+
+    // Level 3 label - white background with dark green text
+    if level3_text != ""
+        label.set_xy(level3_label, bar_index, (level3_start + level3_end) / 2)
+        label.set_text(level3_label, level3_text)
+        label.set_style(level3_label, label_style)
+        label.set_color(level3_label, color.new(color.white, 0))
+        label.set_textcolor(level3_label, color.new(color.green, 0))
+        label.set_size(level3_label, size.normal)
+    else
+        label.delete(level3_label)
+
+    // Level 4 label - white background with dark yellow/orange text
+    if level4_text != ""
+        label.set_xy(level4_label, bar_index, (level4_start + level4_end) / 2)
+        label.set_text(level4_label, level4_text)
+        label.set_style(level4_label, label_style)
+        label.set_color(level4_label, color.new(color.white, 0))
+        label.set_textcolor(level4_label, color.new(color.orange, 0))
+        label.set_size(level4_label, size.normal)
+    else
+        label.delete(level4_label)
+
+    // Level 5 label - white background with dark orange text
+    if level5_text != ""
+        label.set_xy(level5_label, bar_index, (level5_start + level5_end) / 2)
+        label.set_text(level5_label, level5_text)
+        label.set_style(level5_label, label_style)
+        label.set_color(level5_label, color.new(color.white, 0))
+        label.set_textcolor(level5_label, color.new(color.orange, 0))
+        label.set_size(level5_label, size.normal)
+    else
+        label.delete(level5_label)
+
+    // Level 6 label - white background with dark red text
+    if level6_text != ""
+        label.set_xy(level6_label, bar_index, level6_start + 10)
+        label.set_text(level6_label, level6_text)
+        label.set_style(level6_label, label_style)
+        label.set_color(level6_label, color.new(color.white, 0))
+        label.set_textcolor(level6_label, color.new(color.red, 0))
+        label.set_size(level6_label, size.normal)
+    else
+        label.delete(level6_label)
+
+// Highlight current price level
+var label current_level_label = label.new(na, na, "", style=label.style_label_left, size=size.small)
+
+if barstate.islast and is_vix
+    level_text = ""
+    level_color = color.white
+
+    if current_price >= level6_start
+        level_text := "Level 6: 30+"
+        level_color := color.red
+    else if current_price >= level5_start
+        level_text := "Level 5: 25-30"
+        level_color := color.orange
+    else if current_price >= level4_start
+        level_text := "Level 4: 20-25"
+        level_color := color.yellow
+    else if current_price >= level3_start
+        level_text := "Level 3: 15-20"
+        level_color := color.green
+    else if current_price >= level2_start
+        level_text := "Level 2: 12-15"
+        level_color := color.purple
+    else if current_price >= level1_start
+        level_text := "Level 1: 0-12"
+        level_color := color.blue
+
+    label.set_xy(current_level_label, bar_index, current_price)
+    label.set_text(current_level_label, level_text + "\nPrice: " + str.tostring(current_price, "#.##"))
+    label.set_color(current_level_label, level_color)
